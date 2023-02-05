@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Table from "./components/Table";
+import Button from "./components/Button";
 
 // JSON schema
 const data = [
@@ -35,7 +36,7 @@ function App() {
 	};
 
 	useEffect(() => {
-		const webSocket = new WebSocket(`ws://192.168.29.223:80/ws`);
+		const webSocket = new WebSocket(`ws://192.168.29.221:80/ws`);
 
 		if (!ws || ws.readyState === WebSocket.CLOSED) {
 			console.log("Connecting to WS");
@@ -84,18 +85,19 @@ function App() {
 		if (ws) {
 			ws.send(JSON.stringify(jsonSchema));
 		}
-		console.log(jsonSchema);
+		console.log(JSON.stringify(jsonSchema));
 	};
 
 	return (
-		<>
+		<div className="dark px-4 py-5 h-screen bg-gray-900">
 			<Table
 				headers={headers}
 				values={values}
 				handleJsonValues={handleJsonValues}
 				handleSubmit={handleSubmit}
 			/>
-		</>
+			<Button handleClick={handleSubmit}>SEND</Button>
+		</div>
 	);
 }
 
