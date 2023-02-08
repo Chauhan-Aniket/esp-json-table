@@ -29,7 +29,9 @@ const Table = ({ headers, values, handleJsonValues }) => {
 										column[rowIndex]
 									) : (
 										<input
-											type="number"
+											type="text"
+											pattern="[0-9]"
+											maxLength={6}
 											value={
 												isNaN(parseInt(column[rowIndex]))
 													? 0

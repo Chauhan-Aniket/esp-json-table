@@ -10,11 +10,11 @@ const data = [
 	},
 	{
 		header: "Density",
-		values: [1000, 1000, 1000],
+		values: [0, 0, 0],
 	},
 	{
 		header: "Stock (LTR)",
-		values: [1000, 1000, 1000],
+		values: [0, 0, 0],
 	},
 ];
 
@@ -31,7 +31,7 @@ function App() {
 
 	const handleJsonValues = (rowIndex, columnIndex, event) => {
 		const newValues = [...values];
-		newValues[columnIndex][rowIndex] = event.target.value;
+		newValues[columnIndex][rowIndex] = parseInt(event.target.value);
 		setValues(newValues);
 	};
 
@@ -85,7 +85,6 @@ function App() {
 		if (ws) {
 			ws.send(JSON.stringify(jsonSchema));
 		}
-		console.log(JSON.stringify(jsonSchema));
 	};
 
 	return (
