@@ -1,14 +1,14 @@
 import React from "react";
 
-const Table = ({ headers, values, handleJsonValues }) => {
+const Table = ({ jsonSchema, values, handleJsonValues }) => {
 	return (
 		<>
 			<table className="mb-5 w-full text-sm text-gray-500 dark:text-gray-400 rounded overflow-hidden">
 				<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
 					<tr>
-						{headers.map((header, index) => (
+						{Object.keys(jsonSchema).map((headerKey, index) => (
 							<th key={index} scope="col" className="px-4 sm:px-6 py-3">
-								{header}
+								{jsonSchema[headerKey].header[0]}
 							</th>
 						))}
 					</tr>
@@ -26,7 +26,7 @@ const Table = ({ headers, values, handleJsonValues }) => {
 									className="px-3 sm:px-6 py-4 font-medium text-center text-gray-900 whitespace-nowrap dark:text-gray-100 tracking-wide"
 								>
 									{columnIndex === 0 ? (
-										column[rowIndex]
+										column[rowIndex][0]
 									) : (
 										<input
 											type="text"

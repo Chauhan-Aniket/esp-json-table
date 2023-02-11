@@ -5,24 +5,33 @@ import Button from "./components/Button";
 // JSON schema
 const data = [
 	{
-		header: "Product",
-		values: ["Power", "Petrol", "Diesel"],
+		header: ["Product", 0, 0],
+		values: [
+			["Power", 0, 0],
+			["Petrol", 0, 0],
+			["Diesel", 0, 0],
+		],
 	},
 	{
-		header: "Density",
-		values: [0, 0, 0],
+		header: ["Density", 100, 100],
+		values: [
+			[0, 100, 100],
+			[0, 100, 100],
+			[0, 100, 100],
+		],
 	},
 	{
-		header: "Stock (LTR)",
-		values: [0, 0, 0],
+		header: ["Stock (LTR)", 300, 300],
+		values: [
+			[0, 300, 300],
+			[0, 300, 300],
+			[0, 300, 300],
+		],
 	},
 ];
 
 function App() {
 	const [jsonSchema, setJsonSchema] = useState(data);
-	const [headers, setHeaders] = useState(
-		Object.keys(jsonSchema).map((headerKey) => jsonSchema[headerKey].header)
-	);
 	const [values, setValues] = useState(
 		Object.keys(jsonSchema).map((headerKey) => jsonSchema[headerKey].values)
 	);
@@ -31,7 +40,8 @@ function App() {
 
 	const handleJsonValues = (rowIndex, columnIndex, event) => {
 		const newValues = [...values];
-		newValues[columnIndex][rowIndex] = parseInt(event.target.value);
+		newValues[columnIndex][rowIndex][0] = parseInt(event.target.value);
+		console.log(newValues);
 		setValues(newValues);
 	};
 
@@ -52,17 +62,12 @@ function App() {
 				// console.log(e.data);
 				const receivedJson = JSON.parse(e.data);
 				setJsonSchema(receivedJson);
-				setHeaders(
-					Object.keys(receivedJson).map(
-						(headerKey) => receivedJson[headerKey].header
-					)
-				);
 				setValues(
 					Object.keys(receivedJson).map(
 						(headerKey) => receivedJson[headerKey].values
 					)
 				);
-				console.log(receivedJson);
+				// console.log(receivedJson);
 			};
 
 			ws.onclose = () => {
@@ -88,12 +93,11 @@ function App() {
 	};
 
 	return (
-		<div className="dark px-4 py-5 h-screen bg-gray-900">
+		<div className="dark px-4 py-5 min-h-screen bg-gray-900">
 			<Table
-				headers={headers}
+				jsonSchema={jsonSchema}
 				values={values}
 				handleJsonValues={handleJsonValues}
-				handleSubmit={handleSubmit}
 			/>
 			<Button handleClick={handleSubmit}>SEND</Button>
 		</div>
