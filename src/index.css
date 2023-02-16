@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.tab-item {
+	@apply px-5 py-2.5 text-blue-400 bg-blue-700 hover:bg-blue-800  text-sm border border-blue-600 dark:bg-transparent rounded tracking-wide w-full cursor-pointer uppercase tracking-wide;
+}
+
+.active {
+	@apply dark:bg-blue-700 text-white font-medium;
+}
