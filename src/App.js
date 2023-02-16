@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Table from "./components/Table";
+import Config from "./components/Config";
 import Button from "./components/Button";
 
 // JSON schema
@@ -37,16 +38,32 @@ function App() {
 	);
 	const [ws, setWs] = useState(null);
 	const [timeoutId, setTimeoutId] = useState(null);
+	const [selectedTab, setSelectedTab] = useState(1);
 
 	const handleJsonValues = (rowIndex, columnIndex, event) => {
 		const newValues = [...values];
 		newValues[columnIndex][rowIndex][0] = parseInt(event.target.value);
-		console.log(newValues);
 		setValues(newValues);
 	};
 
+	const handleValues = (event, index1, index2, subIndex) => {
+		const updatedData = [...jsonSchema];
+		updatedData[index1].values[index2][subIndex] = parseInt(
+			event.target.value,
+			10
+		);
+
+		setJsonSchema(updatedData);
+	};
+
+	const handleHeader = (event, index1, index2) => {
+		const updatedData = [...jsonSchema];
+		updatedData[index1].header[index2] = parseInt(event.target.value, 10);
+		setJsonSchema(updatedData);
+	};
+
 	useEffect(() => {
-		const webSocket = new WebSocket(`ws://192.168.29.221:80/ws`);
+		const webSocket = new WebSocket(`ws://192.168.0.221:80/ws`);
 
 		if (!ws || ws.readyState === WebSocket.CLOSED) {
 			console.log("Connecting to WS");
@@ -67,7 +84,7 @@ function App() {
 						(headerKey) => receivedJson[headerKey].values
 					)
 				);
-				// console.log(receivedJson);
+				console.log(receivedJson);
 			};
 
 			ws.onclose = () => {
@@ -94,11 +111,37 @@ function App() {
 
 	return (
 		<div className="dark px-4 py-5 min-h-screen bg-gray-900">
-			<Table
-				jsonSchema={jsonSchema}
-				values={values}
-				handleJsonValues={handleJsonValues}
-			/>
+			<div className="tabs mb-5 flex flex-row gap-4 w-full text-center">
+				<div
+					className={`tab-item ${selectedTab === 1 ? "active" : ""}`}
+					onClick={() => setSelectedTab(1)}
+				>
+					Table
+				</div>
+				<div
+					className={`tab-item ${selectedTab === 2 ? "active" : ""}`}
+					onClick={() => setSelectedTab(2)}
+				>
+					Config
+				</div>
+			</div>
+			<div className="tab-content">
+				{selectedTab === 1 && (
+					<Table
+						jsonSchema={jsonSchema}
+						values={values}
+						handleJsonValues={handleJsonValues}
+					/>
+				)}
+				{selectedTab === 2 && (
+					<Config
+						jsonSchema={jsonSchema}
+						handleHeader={handleHeader}
+						handleValues={handleValues}
+					/>
+				)}
+			</div>
+
 			<Button handleClick={handleSubmit}>SEND</Button>
 		</div>
 	);
