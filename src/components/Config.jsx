@@ -1,111 +1,206 @@
 import React from "react";
 
-const Table = ({ jsonSchema, handleValues, handleHeader }) => {
-	const rowHeaders = ["Origin", "x", "y"];
+const Config = ({ jsonSchema, values, handleHeader, handleJsonOrigin }) => {
+	const tableHeader = jsonSchema.map((json, index) => {
+		return (
+			<th key={index} scope="col" className="px-4 sm:px-6 py-3">
+				<div className="grid items-center gap-4 sm:grid-cols-3">
+					<span>{json.header[0]}</span>
+					<input
+						value={
+							isNaN(parseInt(json.header[1])) ? 0 : parseInt(json.header[1])
+						}
+						maxLength={6}
+						onClick={(e) => e.target.select()}
+						onChange={(e) => handleHeader(e, index, 1)}
+						placeholder="X"
+						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm block w-full p-2.5 dark:bg-gray-500 dark:border-gray-600 dark:placeholder-gray-300 dark:text-gray-100 dark:focus:border-blue-500 rounded tracking-wide"
+					/>
+					<input
+						value={
+							isNaN(parseInt(json.header[2])) ? 0 : parseInt(json.header[2])
+						}
+						maxLength={6}
+						onClick={(e) => e.target.select()}
+						onChange={(e) => handleHeader(e, index, 2)}
+						placeholder="Y"
+						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm block w-full p-2.5 dark:bg-gray-500 dark:border-gray-600 dark:placeholder-gray-300 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded tracking-wide"
+					/>
+				</div>
+			</th>
+		);
+	});
 
-	const columnHeader = [
-		{
-			header: ["Power", "Petrol", "Diesel"],
-		},
-		{
-			header: ["Power_Density", "Petrol_Density", "Diesel_Density"],
-		},
-		{
-			header: ["Power_Stock", "Petrol_Stock", "Diesel_Stock"],
-		},
-	];
+	const tableBody = values[0].map((_, rowIndex) => (
+		<tr
+			key={rowIndex}
+			className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+		>
+			{values.map((column, columnIndex) => (
+				<th
+					key={columnIndex}
+					scope="row"
+					className="px-3 sm:px-6 py-4 font-medium text-center text-gray-900 whitespace-nowrap dark:text-gray-100 tracking-wide"
+				>
+					{columnIndex === 0 ? (
+						<div className="grid items-center gap-4 sm:grid-cols-3">
+							<span>{column[rowIndex][0]}</span>
+							<input
+								type="text"
+								pattern="[0-9]"
+								maxLength={6}
+								value={
+									isNaN(parseInt(column[rowIndex][1]))
+										? 0
+										: parseInt(column[rowIndex][1])
+								}
+								onClick={(e) => e.target.select()}
+								onChange={(event) =>
+									handleJsonOrigin(rowIndex, columnIndex, 1, event)
+								}
+								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded tracking-wide"
+							/>
+							<input
+								type="text"
+								pattern="[0-9]"
+								maxLength={6}
+								value={
+									isNaN(parseInt(column[rowIndex][2]))
+										? 0
+										: parseInt(column[rowIndex][2])
+								}
+								onClick={(e) => e.target.select()}
+								onChange={(event) =>
+									handleJsonOrigin(rowIndex, columnIndex, 2, event)
+								}
+								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded tracking-wide"
+							/>
+						</div>
+					) : (
+						<div className="grid items-center gap-4 sm:grid-cols-2">
+							<input
+								type="text"
+								pattern="[0-9]"
+								maxLength={6}
+								value={
+									isNaN(parseInt(column[rowIndex][1]))
+										? 0
+										: parseInt(column[rowIndex][1])
+								}
+								onClick={(e) => e.target.select()}
+								onChange={(event) =>
+									handleJsonOrigin(rowIndex, columnIndex, 1, event)
+								}
+								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded tracking-wide"
+							/>
+							<input
+								type="text"
+								pattern="[0-9]"
+								maxLength={6}
+								value={
+									isNaN(parseInt(column[rowIndex][2]))
+										? 0
+										: parseInt(column[rowIndex][2])
+								}
+								onClick={(e) => e.target.select()}
+								onChange={(event) =>
+									handleJsonOrigin(rowIndex, columnIndex, 2, event)
+								}
+								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded tracking-wide"
+							/>
+						</div>
+					)}
+				</th>
+			))}
+		</tr>
+	));
 
-	return (
-		<table className="mb-5 w-full text-sm text-gray-500 dark:text-gray-400 rounded overflow-hidden">
-			<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
-				<tr>
-					{rowHeaders.map((header, index) => (
-						<th key={index} scope="col" className="px-4 sm:px-6 py-3">
-							{header}
-						</th>
-					))}
-				</tr>
-			</thead>
-			<tbody>
-				{jsonSchema.map((dataItem, index) => {
-					return (
-						<tr
-							key={index}
-							className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+	const rows_2 = jsonSchema.map((json, index) => {
+		// console.log(json.values[0], index);
+		return (
+			<th key={index} scope="col" className="px-4 sm:px-6 py-3">
+				<div
+					className={`grid items-center gap-4 grid-cols-1 sm:grid-cols-2 ${
+						index === 0 && "grid-cols-1 sm:grid-cols-3"
+					}`}
+				>
+					{index === 0 && <span>{json.values[0][0]}</span>}
+					<input
+						value={json.values[0][1]}
+						onChange={() => {}}
+						placeholder="X"
+						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm block w-full p-2.5 dark:bg-gray-500 dark:border-gray-600 dark:placeholder-gray-300 dark:text-gray-100 dark:focus:border-blue-500 rounded tracking-wide"
+					/>
+					<input
+						value={json.values[0][2]}
+						onChange={() => {}}
+						placeholder="Y"
+						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm block w-full p-2.5 dark:bg-gray-500 dark:border-gray-600 dark:placeholder-gray-300 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded tracking-wide"
+					/>
+				</div>
+			</th>
+		);
+	});
+
+	const rows_1 = jsonSchema.map((json, index) => {
+		// console.log(json.values);
+		return (
+			<th key={index} scope="row" className="">
+				{json.values.map((value, subIndex) => {
+					// console.log(value);
+					return index === 0 ? (
+						<div
+							key={subIndex}
+							className="px-4 sm:px-6 py-3 grid items-center gap-4 sm:grid-cols-3"
 						>
-							<th
-								scope="row"
-								className="px-3 sm:px-6 py-4 font-medium text-center text-gray-900 whitespace-nowrap dark:text-gray-100 tracking-wide"
-							>
-								{dataItem.header[0]}
-							</th>
-							<td className="px-3 sm:px-6 py-4 font-medium text-center text-gray-900 whitespace-nowrap dark:text-gray-100 tracking-wide">
-								<input
-									type="text"
-									value={
-										isNaN(parseInt(dataItem.header[1], 10))
-											? 0
-											: parseInt(dataItem.header[1], 10)
-									}
-									onChange={(e) => handleHeader(e, index, 1)}
-									className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded tracking-wide"
-								/>
-							</td>
-							<td className="px-3 sm:px-6 py-4 font-medium text-center text-gray-900 whitespace-nowrap dark:text-gray-100 tracking-wide">
-								<input
-									type="text"
-									value={
-										isNaN(parseInt(dataItem.header[2], 10))
-											? 0
-											: parseInt(dataItem.header[2], 10)
-									}
-									onChange={(e) => handleHeader(e, index, 2)}
-									className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded tracking-wide"
-								/>
-							</td>
-						</tr>
+							<span>{value[0]}</span>
+							<input
+								value={value[1]}
+								onChange={() => {}}
+								placeholder="X"
+								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:border-blue-500 rounded tracking-wide"
+							/>
+							<input
+								value={value[2]}
+								onChange={() => {}}
+								placeholder="Y"
+								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:border-blue-500 rounded tracking-wide"
+							/>
+						</div>
+					) : (
+						<div
+							key={subIndex}
+							className="px-4 sm:px-6 py-3 grid justify-between sm:items-center gap-4 sm:grid-cols-2"
+						>
+							<input
+								value="0"
+								onChange={() => {}}
+								placeholder="X"
+								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:border-blue-500 rounded tracking-wide"
+							/>
+							<input
+								value="0"
+								onChange={() => {}}
+								placeholder="Y"
+								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:border-blue-500 rounded tracking-wide"
+							/>
+						</div>
 					);
 				})}
-				{jsonSchema.map((dataItem, index1) => {
-					return dataItem.values.map((value, index2) => {
-						return (
-							<tr
-								key={index2}
-								className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-							>
-								<th
-									scope="row"
-									className="px-3 sm:px-6 py-4 font-medium text-center text-gray-900 whitespace-nowrap dark:text-gray-100 tracking-wide"
-								>
-									{/* {value[0]} */}
-									{columnHeader[index1].header[index2]}
-								</th>
-								{value.map(
-									(val, subIndex) =>
-										subIndex > 0 && (
-											<td
-												key={subIndex}
-												className="px-3 sm:px-6 py-4 font-medium text-center text-gray-900 whitespace-nowrap dark:text-gray-100 tracking-wide"
-											>
-												<input
-													value={
-														isNaN(parseInt(val, 10)) ? 0 : parseInt(val, 10)
-													}
-													onChange={(e) =>
-														handleValues(e, index1, index2, subIndex)
-													}
-													className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded tracking-wide"
-												/>
-											</td>
-										)
-								)}
-							</tr>
-						);
-					});
-				})}
-			</tbody>
-		</table>
+			</th>
+		);
+	});
+
+	return (
+		<>
+			<table className="mb-5 w-full text-sm text-gray-500 dark:text-gray-400 rounded overflow-hidden">
+				<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+					<tr>{tableHeader}</tr>
+				</thead>
+				<tbody>{tableBody}</tbody>
+			</table>
+		</>
 	);
 };
 
-export default Table;
+export default Config;

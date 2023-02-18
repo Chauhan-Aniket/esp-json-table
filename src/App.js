@@ -46,14 +46,10 @@ function App() {
 		setValues(newValues);
 	};
 
-	const handleValues = (event, index1, index2, subIndex) => {
-		const updatedData = [...jsonSchema];
-		updatedData[index1].values[index2][subIndex] = parseInt(
-			event.target.value,
-			10
-		);
-
-		setJsonSchema(updatedData);
+	const handleJsonOrigin = (rowIndex, columnIndex, subIndex, event) => {
+		const newValues = [...values];
+		newValues[columnIndex][rowIndex][subIndex] = parseInt(event.target.value);
+		setValues(newValues);
 	};
 
 	const handleHeader = (event, index1, index2) => {
@@ -136,8 +132,9 @@ function App() {
 				{selectedTab === 2 && (
 					<Config
 						jsonSchema={jsonSchema}
+						values={values}
 						handleHeader={handleHeader}
-						handleValues={handleValues}
+						handleJsonOrigin={handleJsonOrigin}
 					/>
 				)}
 			</div>
