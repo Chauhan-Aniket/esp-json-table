@@ -122,14 +122,13 @@ function App() {
 				</div>
 			</div>
 			<div className="tab-content">
-				{selectedTab === 1 && (
+				{selectedTab === 1 ? (
 					<Table
 						jsonSchema={jsonSchema}
 						values={values}
 						handleJsonValues={handleJsonValues}
 					/>
-				)}
-				{selectedTab === 2 && (
+				) : (
 					<Config
 						jsonSchema={jsonSchema}
 						values={values}
@@ -139,7 +138,9 @@ function App() {
 				)}
 			</div>
 
-			<Button handleClick={handleSubmit}>SEND</Button>
+			<div className="mt-2 flex flex-row-reverse">
+				<Button handleClick={handleSubmit}>SEND</Button>
+			</div>
 		</div>
 	);
 }
