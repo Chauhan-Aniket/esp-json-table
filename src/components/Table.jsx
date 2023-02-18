@@ -37,6 +37,7 @@ const Table = ({ jsonSchema, values, handleJsonValues }) => {
 													? 0
 													: parseInt(column[rowIndex])
 											}
+											onClick={(e) => e.target.select()}
 											onChange={(event) =>
 												handleJsonValues(rowIndex, columnIndex, event)
 											}
