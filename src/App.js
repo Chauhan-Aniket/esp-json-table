@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Table from "./components/Table";
 import Config from "./components/Config";
 import Button from "./components/Button";
+import Loader from "./components/Loader";
 
 // JSON schema
 const data = [
@@ -39,6 +40,7 @@ function App() {
 	const [ws, setWs] = useState(null);
 	const [timeoutId, setTimeoutId] = useState(null);
 	const [selectedTab, setSelectedTab] = useState(1);
+	const [isMessageReceived, setMessageReceived] = useState(false);
 
 	const handleJsonValues = (rowIndex, columnIndex, event) => {
 		const newValues = [...values];
@@ -59,7 +61,7 @@ function App() {
 	};
 
 	useEffect(() => {
-		const webSocket = new WebSocket(`ws://192.168.0.221:80/ws`);
+		const webSocket = new WebSocket(`ws://192.168.29.226:80/ws`);
 
 		if (!ws || ws.readyState === WebSocket.CLOSED) {
 			console.log("Connecting to WS");
@@ -72,6 +74,7 @@ function App() {
 			};
 
 			ws.onmessage = (e) => {
+				setMessageReceived(true);
 				// console.log(e.data);
 				const receivedJson = JSON.parse(e.data);
 				setJsonSchema(receivedJson);
@@ -121,26 +124,31 @@ function App() {
 					Config
 				</div>
 			</div>
-			<div className="tab-content">
-				{selectedTab === 1 ? (
-					<Table
-						jsonSchema={jsonSchema}
-						values={values}
-						handleJsonValues={handleJsonValues}
-					/>
-				) : (
-					<Config
-						jsonSchema={jsonSchema}
-						values={values}
-						handleHeader={handleHeader}
-						handleJsonOrigin={handleJsonOrigin}
-					/>
-				)}
-			</div>
-
-			<div className="mt-2 flex flex-row-reverse">
-				<Button handleClick={handleSubmit}>SEND</Button>
-			</div>
+			{isMessageReceived ? (
+				<>
+					<div className="tab-content">
+						{selectedTab === 1 ? (
+							<Table
+								jsonSchema={jsonSchema}
+								values={values}
+								handleJsonValues={handleJsonValues}
+							/>
+						) : (
+							<Config
+								jsonSchema={jsonSchema}
+								values={values}
+								handleHeader={handleHeader}
+								handleJsonOrigin={handleJsonOrigin}
+							/>
+						)}
+					</div>
+					<div className="mt-2 flex flex-row-reverse">
+						<Button handleClick={handleSubmit}>SEND</Button>
+					</div>
+				</>
+			) : (
+				<Loader />
+			)}
 		</div>
 	);
 }
